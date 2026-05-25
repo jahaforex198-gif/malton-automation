@@ -1,0 +1,22 @@
+name = "malton-ai"
+main = "dist/worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat_v2"]
+
+# Static assets (the built React app)
+[assets]
+directory = "dist/public"
+binding = "ASSETS"
+
+# Non-secret env vars (secrets are set in Cloudflare dashboard)
+[vars]
+NODE_ENV = "production"
+
+# Custom domain routing
+[[routes]]
+pattern = "maltonautomation.com/*"
+zone_name = "maltonautomation.com"
+
+[[routes]]
+pattern = "www.maltonautomation.com/*"
+zone_name = "maltonautomation.com"
