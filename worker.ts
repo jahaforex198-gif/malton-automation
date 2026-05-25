@@ -194,8 +194,7 @@ export default {
       pathname.startsWith("/api/") ||
       pathname.startsWith("/manus-storage/")
     ) {
-      // return handleWithExpress(request);
-      return new Response("API disabled for Workers compatibility", { status: 501 });
+      return handleWithExpress(request);
     }
 
     // Everything else → static assets (React SPA)
