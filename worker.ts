@@ -6,7 +6,7 @@
  * - Everything else → Cloudflare Assets (static React build)
  */
 
-import { Readable } from "node:stream";
+
 import { createApp } from "./server/_core/app";
 
 // Initialise the Express app once (cold start)
@@ -18,12 +18,12 @@ async function handleWithExpress(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const rawBody =
     request.body && request.method !== "GET" && request.method !== "HEAD"
-      ? Buffer.from(await request.arrayBuffer())
+      ? await request.arrayBuffer()
       : null;
 
   return new Promise<Response>((resolve) => {
     // Build a Node.js-compatible IncomingMessage
-    const nodeReq: any = Object.assign(new Readable({ read() {} }), {
+    const nodeReq: any = {
       method: request.method,
       url: url.pathname + url.search,
       headers: Object.fromEntries(request.headers.entries()),
@@ -32,14 +32,15 @@ async function handleWithExpress(request: Request): Promise<Response> {
       httpVersion: "1.1",
       httpVersionMajor: 1,
       httpVersionMinor: 1,
-    });
-
-    if (rawBody) nodeReq.push(rawBody);
-    nodeReq.push(null);
+      on: () => {},
+      once: () => {},
+      emit: () => {},
+      body: rawBody,
+    };
 
     // Collect the response
     const resHeaders: Record<string, string | string[]> = {};
-    const chunks: Buffer[] = [];
+    const chunks: any[] = [];
 
     const nodeRes: any = {
       statusCode: 200,
@@ -73,24 +74,32 @@ async function handleWithExpress(request: Request): Promise<Response> {
         this.headersSent = true;
         return this;
       },
-      write(chunk: any, _enc?: any, cb?: () => void) {
-        chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)));
-        cb?.();
+      write(chunk: any) {
+        chunks.push(typeof chunk === 'string' ? new TextEncoder().encode(chunk) : chunk);
         return true;
       },
-      end(chunk?: any, _enc?: any, cb?: () => void) {
+      end(chunk?: any) {
         if (chunk != null) {
-          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)));
+          chunks.push(typeof chunk === 'string' ? new TextEncoder().encode(chunk) : chunk);
         }
         this.finished = true;
-        cb?.();
 
         const flat: Record<string, string> = {};
         for (const [k, v] of Object.entries(resHeaders)) {
           flat[k] = Array.isArray(v) ? v.join(", ") : v;
         }
+
+        let totalLength = 0;
+        for (const c of chunks) totalLength += c.length;
+        const body = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const c of chunks) {
+          body.set(c, offset);
+          offset += c.length;
+        }
+
         resolve(
-          new Response(chunks.length ? Buffer.concat(chunks) : null, {
+          new Response(totalLength ? body : null, {
             status: this.statusCode,
             headers: flat,
           })
@@ -100,6 +109,44 @@ async function handleWithExpress(request: Request): Promise<Response> {
       once() { return this; },
       emit() { return false; },
       destroy() {},
+      status(code: number) { this.statusCode = code; return this; },
+      json(data: any) {
+        this.setHeader('Content-Type', 'application/json');
+        this.end(JSON.stringify(data));
+      },
+      send(data: any) {
+        if (typeof data === 'object') return this.json(data);
+        this.end(data);
+      },
+      cookie(name: string, value: string, options: any) {
+        let cookie = `${name}=${value}`;
+        if (options.path) cookie += `; Path=${options.path}`;
+        if (options.httpOnly) cookie += `; HttpOnly`;
+        if (options.secure) cookie += `; Secure`;
+        if (options.sameSite) cookie += `; SameSite=${options.sameSite}`;
+        if (options.maxAge) cookie += `; Max-Age=${Math.floor(options.maxAge / 1000)}`;
+        const existing = this.getHeader('Set-Cookie');
+        if (existing) {
+          const cookies = Array.isArray(existing) ? existing : [existing];
+          cookies.push(cookie);
+          this.setHeader('Set-Cookie', cookies);
+        } else {
+          this.setHeader('Set-Cookie', cookie);
+        }
+        return this;
+      },
+      clearCookie(name: string, options: any) {
+        return this.cookie(name, '', { ...options, maxAge: 0 });
+      },
+      redirect(status: number | string, url?: string) {
+        if (typeof status === 'string') {
+          url = status;
+          status = 302;
+        }
+        this.statusCode = status;
+        this.setHeader('Location', url!);
+        this.end();
+      },
     };
 
     // Run through Express; if no route matched, resolve 404

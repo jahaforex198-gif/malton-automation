@@ -5,15 +5,15 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
-    "build": "vite build && pnpm build:worker",
+    "build": "vite build",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
-    "build:worker": "esbuild worker.ts --bundle --format=esm --platform=node --target=es2022 --outfile=dist/worker.js --external:cloudflare:* --define:process.env.NODE_ENV='\"production\"'  ",
+    "build:client": "vite build",
     "build:server": "esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "deploy": "pnpm build && wrangler deploy"
+    "deploy": "pnpm build:client && wrangler deploy"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
@@ -108,7 +108,6 @@
   "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af",
   "pnpm": {
     "patchedDependencies": {
-      "wouter@3.7.1": "patches/wouter@3.7.1.patch"
     },
     "overrides": {}
   }
