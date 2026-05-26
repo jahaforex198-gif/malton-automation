@@ -1,409 +1,70 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Edit2, X, Save, Smartphone, Shield, Zap, BarChart3, Clock, Layers, Star, CheckCircle } from 'lucide-react';
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-interface Feature {
-  id: number;
-  number: string;
-  title: string;
-  description: string;
-  isFeatured?: boolean;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #141414;
+  --bg-card: #1A1A1A;
+  --accent: #C8FF00;
+  --accent-glow: rgba(200, 255, 0, 0.15);
+  --text-primary: #FFFFFF;
+  --text-muted: #888888;
+  --text-on-accent: #0D0D0D;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --radius-card: 16px;
+  --radius-btn: 9999px;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-accent: 0 0 20px rgba(200, 255, 0, 0.3);
 }
 
-const initialFeatures: Feature[] = [
-  {
-    id: 1,
-    number: '01.',
-    title: 'AI-Powered Automation',
-    description: 'Leverage advanced machine learning algorithms to automate complex workflows and decision-making processes instantly.',
-    isFeatured: false,
-  },
-  {
-    id: 2,
-    number: '02.',
-    title: 'Real-Time Analytics',
-    description: 'Monitor your business metrics with live dashboards, predictive insights, and customizable reporting tools.',
-    isFeatured: true,
-  },
-  {
-    id: 3,
-    number: '03.',
-    title: 'Enterprise Security',
-    description: 'Bank-grade encryption, multi-factor authentication, and compliance-ready infrastructure to protect your data.',
-    isFeatured: false,
-  },
-];
-
-export default function Home() {
-  const [features, setFeatures] = useState<Feature[]>(initialFeatures);
-  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
-  const [editForm, setEditForm] = useState({ title: '', description: '' });
-
-  const handleCardClick = (feature: Feature) => {
-    setSelectedFeature(feature);
-    setEditForm({ title: feature.title, description: feature.description });
-  };
-
-  const handleSave = () => {
-    if (!selectedFeature) return;
-    
-    setFeatures(features.map(f => 
-      f.id === selectedFeature.id 
-        ? { ...f, title: editForm.title, description: editForm.description }
-        : f
-    ));
-    setSelectedFeature(null);
-  };
-
-  return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white font-sans overflow-x-hidden">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-[#0D0D0D]/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="text-2xl font-bold text-[#C8FF00] tracking-tight">MALTON<span className="text-white">AI</span></div>
-          <div className="hidden md:flex space-x-8">
-            {['Features', 'Solutions', 'Pricing', 'About'].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-white hover:text-[#C8FF00] transition-colors">
-                {item}
-              </a>
-            ))}
-          </div>
-          <button className="bg-[#C8FF00] text-black px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(200,255,0,0.4)] transition-all transform hover:scale-105">
-            Get Started
-          </button>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#C8FF00]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-block px-4 py-1.5 mb-6 border border-[#C8FF00]/30 rounded-full bg-[#C8FF00]/5">
-              <span className="text-[#C8FF00] text-xs font-bold uppercase tracking-widest">Keep Your Money Safe</span>
-            </div>
-            
-            <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-8">
-              The Future of <br />
-              <span className="text-[#C8FF00]">Trusted</span> Automation
-            </h1>
-
-            <p className="text-[#888888] text-lg mb-8 max-w-lg leading-relaxed">
-              Empower your business with AI-driven solutions that scale effortlessly. Join thousands of enterprises transforming their workflows today.
-            </p>
-
-            <div className="flex items-center gap-8 mb-12">
-              <div className="flex -space-x-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-12 h-12 rounded-full border-2 border-[#0D0D0D] bg-gray-700 overflow-hidden">
-                    <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-white">168K+</div>
-                <div className="text-[#888888] text-sm">Realtime Users</div>
-              </div>
-            </div>
-
-            <button className="group bg-[#C8FF00] text-black w-14 h-14 rounded-full flex items-center justify-center hover:shadow-[0_0_25px_rgba(200,255,0,0.5)] transition-all duration-300">
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative hidden lg:block"
-          >
-            <div className="relative z-10">
-              <motion.div 
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-0 right-0 w-64 h-[500px] bg-[#1A1A1A] border border-white/10 rounded-3xl shadow-2xl overflow-hidden rotate-[-6deg] origin-bottom-left"
-              >
-                <div className="absolute top-0 inset-x-0 h-6 bg-black/50 z-20" />
-                <div className="w-full h-full bg-gradient-to-b from-gray-900 to-black p-6 flex items-center justify-center">
-                  <BarChart3 className="w-24 h-24 text-[#C8FF00]/20" />
-                </div>
-              </motion.div>
-
-              <motion.div 
-                animate={{ y: [0, 25, 0] }}
-                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute top-10 right-32 w-72 h-[550px] bg-[#141414] border border-[#C8FF00]/20 rounded-3xl shadow-[0_0_40px_rgba(200,255,0,0.1)] overflow-hidden rotate-[3deg] z-20"
-              >
-                <div className="absolute top-0 inset-x-0 h-6 bg-black/50 z-20" />
-                <div className="w-full h-full bg-gradient-to-b from-gray-900 to-[#0D0D0D] p-6 flex flex-col justify-end">
-                  <div className="text-[#C8FF00] text-4xl font-bold">$4,528</div>
-                  <div className="text-white text-sm mt-2">Total Revenue</div>
-                  <div className="mt-4 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#C8FF00] w-[70%]" />
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-            
-            {/* Glow Effect */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#C8FF00]/10 rounded-full blur-3xl -z-10" />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-24 bg-[#0D0D0D] relative">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            <div>
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-                Your trusted partner of <br />
-                <span className="text-[#C8FF00]">growing</span> business
-              </h2>
-            </div>
-            <div className="flex items-end">
-              <p className="text-[#888888] text-lg leading-relaxed max-w-md">
-                We provide the infrastructure for you to build, scale, and manage your automated workflows with confidence and precision.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => handleCardClick(feature)}
-                className={`
-                  relative p-8 rounded-[20px] cursor-pointer group transition-all duration-300
-                  ${feature.isFeatured 
-                    ? 'bg-[#C8FF00] text-black transform md:-translate-y-4 shadow-[0_0_30px_rgba(200,255,0,0.2)]' 
-                    : 'bg-[#141414] border border-white/5 hover:border-[#C8FF00]/30 hover:bg-[#1A1A1A]'
-                  }
-                `}
-              >
-                <div className={`text-3xl font-bold mb-6 ${feature.isFeatured ? 'text-black/80' : 'text-[#C8FF00]'}`}>
-                  {feature.number}
-                </div>
-                <h3 className={`text-2xl font-bold mb-4 ${feature.isFeatured ? 'text-black' : 'text-white'}`}>
-                  {feature.title}
-                </h3>
-                <p className={`leading-relaxed ${feature.isFeatured ? 'text-black/80' : 'text-[#888888]'}`}>
-                  {feature.description}
-                </p>
-                
-                {feature.isFeatured && (
-                  <div className="mt-8 flex items-center text-black font-bold group-hover:gap-2 transition-all">
-                    Learn More <ArrowRight className="w-5 h-5 ml-2" />
-                  </div>
-                )}
-
-                {!feature.isFeatured && (
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Edit2 className="w-5 h-5 text-[#C8FF00]" />
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats / Chart Section */}
-      <section className="py-24 bg-[#0D0D0D]">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="relative bg-[#141414] border border-white/5 rounded-3xl p-8 lg:p-12 overflow-hidden">
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#C8FF00]/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
-            
-            <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
-              <div>
-                <h3 className="text-3xl font-bold mb-6">Live Performance Metrics</h3>
-                <p className="text-[#888888] mb-8">Track your automation success in real-time with our advanced analytics dashboard.</p>
-                
-                <div className="space-y-4">
-                  {[
-                    { label: 'Active Workflows', value: '98.5%', change: '+12%' },
-                    { label: 'Tasks Completed', value: '2.4M', change: '+24%' },
-                    { label: 'Avg. Response Time', value: '12ms', change: '-5%' },
-                  ].map((stat, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 bg-[#0D0D0D] rounded-xl border border-white/5">
-                      <span className="text-[#888888]">{stat.label}</span>
-                      <div className="flex items-center gap-4">
-                        <span className="text-white font-bold">{stat.value}</span>
-                        <span className={`text-sm font-bold ${stat.change.startsWith('+') ? 'text-[#C8FF00]' : 'text-red-500'}`}>
-                          {stat.change}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="relative h-[300px] bg-[#0D0D0D] rounded-2xl border border-white/5 p-6 flex items-end justify-between overflow-hidden">
-                {/* Mock Chart Lines */}
-                <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
-                  <path d="M0,200 C100,180 200,250 300,150 S500,100 600,50 L600,300 L0,300 Z" fill="rgba(200,255,0,0.05)" />
-                  <path d="M0,200 C100,180 200,250 300,150 S500,100 600,50" fill="none" stroke="#C8FF00" strokeWidth="3" />
-                </svg>
-                
-                {/* Floating Cards */}
-                <motion.div 
-                  animate={{ y: [0, -10, 0], rotate: [-2, 2, -2] }}
-                  transition={{ duration: 5, repeat: Infinity }}
-                  className="absolute top-10 left-10 bg-[#1A1A1A]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-xl z-20"
-                >
-                  <div className="text-[#888888] text-xs mb-1">Revenue</div>
-                  <div className="text-white font-bold text-lg">$4,528 USD</div>
-                  <div className="text-[#C8FF00] text-xs font-bold mt-1">+12.5%</div>
-                </motion.div>
-
-                <motion.div 
-                  animate={{ y: [0, 10, 0], rotate: [2, -2, 2] }}
-                  transition={{ duration: 6, repeat: Infinity, delay: 1 }}
-                  className="absolute bottom-10 right-10 bg-[#1A1A1A]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-xl z-20"
-                >
-                  <div className="text-[#888888] text-xs mb-1">Active Nodes</div>
-                  <div className="text-white font-bold text-lg">843</div>
-                  <div className="text-[#C8FF00] text-xs font-bold mt-1">Online</div>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Section */}
-      <section className="py-24 bg-[#0D0D0D]">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="order-2 lg:order-1">
-               <div className="relative rounded-3xl overflow-hidden border border-white/5">
-                 <img src="https://images.unsplash.com/photo-1639322537228-ad7117a767f5?q=80&w=2000&auto=format&fit=crop" alt="Dashboard" className="w-full h-auto opacity-80" />
-                 <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] to-transparent" />
-               </div>
-            </div>
-            
-            <div className="order-1 lg:order-2">
-              <div className="flex gap-1 mb-6">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star key={i} className="w-5 h-5 text-[#C8FF00] fill-[#C8FF00]" />
-                ))}
-              </div>
-              
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                Trusted platform <br /> anytime & anywhere
-              </h2>
-              
-              <p className="text-[#888888] text-lg mb-6 leading-relaxed">
-                Our enterprise-grade infrastructure ensures 99.99% uptime with military-grade security protocols.
-              </p>
-              
-              <p className="text-[#888888] text-lg mb-10 leading-relaxed">
-                Join industry leaders who rely on Malton AI to power their critical business operations globally.
-              </p>
-
-              <div className="flex flex-wrap gap-4">
-                <button className="bg-[#C8FF00] text-black px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(200,255,0,0.4)] transition-all">
-                  Start Free Trial
-                </button>
-                <button className="bg-transparent border border-white/20 text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider hover:border-[#C8FF00] hover:text-[#C8FF00] transition-all">
-                  Contact Sales
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-white/5 bg-[#0D0D0D] py-12">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-2xl font-bold text-[#C8FF00]">MALTON<span className="text-white">AI</span></div>
-          <div className="text-[#888888] text-sm">
-            © 2024 Malton Automation. All rights reserved.
-          </div>
-          <div className="flex gap-6">
-            {['Privacy', 'Terms', 'Twitter', 'GitHub'].map((item) => (
-              <a key={item} href="#" className="text-[#888888] hover:text-[#C8FF00] text-sm transition-colors">
-                {item}
-              </a>
-            ))}
-          </div>
-        </div>
-      </footer>
-
-      {/* Edit Modal */}
-      <AnimatePresence>
-        {selectedFeature && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-            onClick={() => setSelectedFeature(null)}
-          >
-            <motion.div 
-              initial={{ scale: 0.95, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-[#141414] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
-            >
-              <div className="p-6 border-b border-white/5 flex justify-between items-center">
-                <h3 className="text-xl font-bold text-white">Edit Feature</h3>
-                <button onClick={() => setSelectedFeature(null)} className="text-[#888888] hover:text-white">
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-              
-              <div className="p-6 space-y-6">
-                <div>
-                  <label className="block text-xs font-bold text-[#C8FF00] uppercase mb-2">Title</label>
-                  <input 
-                    type="text" 
-                    value={editForm.title}
-                    onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                    className="w-full bg-[#0D0D0D] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#C8FF00] transition-colors"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-xs font-bold text-[#C8FF00] uppercase mb-2">Description</label>
-                  <textarea 
-                    value={editForm.description}
-                    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                    rows={4}
-                    className="w-full bg-[#0D0D0D] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#C8FF00] transition-colors resize-none"
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-4">
-                  <button 
-                    onClick={() => setSelectedFeature(null)}
-                    className="flex-1 bg-transparent border border-white/20 text-white py-3 rounded-lg font-bold hover:bg-white/5 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    onClick={handleSave}
-                    className="flex-1 bg-[#C8FF00] text-black py-3 rounded-lg font-bold hover:shadow-[0_0_15px_rgba(200,255,0,0.3)] transition-all flex items-center justify-center gap-2"
-                  >
-                    <Save className="w-4 h-4" /> Save Changes
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Selection Color */
+::selection {
+  background: var(--accent);
+  color: #000;
+}
+
+/* Utility Classes */
+.text-accent { color: var(--accent); }
+.bg-accent { background-color: var(--accent); }
+.border-subtle { border-color: var(--border-subtle); }
+.glow-accent { box-shadow: var(--shadow-accent); }
