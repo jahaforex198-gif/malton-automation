@@ -1,164 +1,409 @@
-@import "tailwindcss";
-@plugin "tailwindcss-animate";
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Edit2, X, Save, Smartphone, Shield, Zap, BarChart3, Clock, Layers, Star, CheckCircle } from 'lucide-react';
 
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+interface Feature {
+  id: number;
+  number: string;
+  title: string;
+  description: string;
+  isFeatured?: boolean;
 }
 
-:root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
-}
+const initialFeatures: Feature[] = [
+  {
+    id: 1,
+    number: '01.',
+    title: 'AI-Powered Automation',
+    description: 'Leverage advanced machine learning algorithms to automate complex workflows and decision-making processes instantly.',
+    isFeatured: false,
+  },
+  {
+    id: 2,
+    number: '02.',
+    title: 'Real-Time Analytics',
+    description: 'Monitor your business metrics with live dashboards, predictive insights, and customizable reporting tools.',
+    isFeatured: true,
+  },
+  {
+    id: 3,
+    number: '03.',
+    title: 'Enterprise Security',
+    description: 'Bank-grade encryption, multi-factor authentication, and compliance-ready infrastructure to protect your data.',
+    isFeatured: false,
+  },
+];
 
-.dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground: oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
-}
+export default function Home() {
+  const [features, setFeatures] = useState<Feature[]>(initialFeatures);
+  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
+  const [editForm, setEditForm] = useState({ title: '', description: '' });
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  button:not(:disabled),
-  [role="button"]:not([aria-disabled="true"]),
-  [type="button"]:not(:disabled),
-  [type="submit"]:not(:disabled),
-  [type="reset"]:not(:disabled),
-  a[href],
-  select:not(:disabled),
-  input[type="checkbox"]:not(:disabled),
-  input[type="radio"]:not(:disabled) {
-    @apply cursor-pointer;
-  }
-}
+  const handleCardClick = (feature: Feature) => {
+    setSelectedFeature(feature);
+    setEditForm({ title: feature.title, description: feature.description });
+  };
 
-@layer components {
-  .container {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+  const handleSave = () => {
+    if (!selectedFeature) return;
+    
+    setFeatures(features.map(f => 
+      f.id === selectedFeature.id 
+        ? { ...f, title: editForm.title, description: editForm.description }
+        : f
+    ));
+    setSelectedFeature(null);
+  };
 
-  .flex {
-    min-height: 0;
-    min-width: 0;
-  }
+  return (
+    <div className="min-h-screen bg-[#0D0D0D] text-white font-sans overflow-x-hidden">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-[#0D0D0D]/80 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="text-2xl font-bold text-[#C8FF00] tracking-tight">MALTON<span className="text-white">AI</span></div>
+          <div className="hidden md:flex space-x-8">
+            {['Features', 'Solutions', 'Pricing', 'About'].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-white hover:text-[#C8FF00] transition-colors">
+                {item}
+              </a>
+            ))}
+          </div>
+          <button className="bg-[#C8FF00] text-black px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(200,255,0,0.4)] transition-all transform hover:scale-105">
+            Get Started
+          </button>
+        </div>
+      </nav>
 
-  @media (min-width: 640px) {
-    .container {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-  }
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#C8FF00]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="inline-block px-4 py-1.5 mb-6 border border-[#C8FF00]/30 rounded-full bg-[#C8FF00]/5">
+              <span className="text-[#C8FF00] text-xs font-bold uppercase tracking-widest">Keep Your Money Safe</span>
+            </div>
+            
+            <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-8">
+              The Future of <br />
+              <span className="text-[#C8FF00]">Trusted</span> Automation
+            </h1>
 
-  @media (min-width: 1024px) {
-    .container {
-      padding-left: 2rem;
-      padding-right: 2rem;
-      max-width: 1280px;
-    }
-  }
+            <p className="text-[#888888] text-lg mb-8 max-w-lg leading-relaxed">
+              Empower your business with AI-driven solutions that scale effortlessly. Join thousands of enterprises transforming their workflows today.
+            </p>
+
+            <div className="flex items-center gap-8 mb-12">
+              <div className="flex -space-x-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="w-12 h-12 rounded-full border-2 border-[#0D0D0D] bg-gray-700 overflow-hidden">
+                    <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">168K+</div>
+                <div className="text-[#888888] text-sm">Realtime Users</div>
+              </div>
+            </div>
+
+            <button className="group bg-[#C8FF00] text-black w-14 h-14 rounded-full flex items-center justify-center hover:shadow-[0_0_25px_rgba(200,255,0,0.5)] transition-all duration-300">
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative hidden lg:block"
+          >
+            <div className="relative z-10">
+              <motion.div 
+                animate={{ y: [0, -20, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-0 right-0 w-64 h-[500px] bg-[#1A1A1A] border border-white/10 rounded-3xl shadow-2xl overflow-hidden rotate-[-6deg] origin-bottom-left"
+              >
+                <div className="absolute top-0 inset-x-0 h-6 bg-black/50 z-20" />
+                <div className="w-full h-full bg-gradient-to-b from-gray-900 to-black p-6 flex items-center justify-center">
+                  <BarChart3 className="w-24 h-24 text-[#C8FF00]/20" />
+                </div>
+              </motion.div>
+
+              <motion.div 
+                animate={{ y: [0, 25, 0] }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute top-10 right-32 w-72 h-[550px] bg-[#141414] border border-[#C8FF00]/20 rounded-3xl shadow-[0_0_40px_rgba(200,255,0,0.1)] overflow-hidden rotate-[3deg] z-20"
+              >
+                <div className="absolute top-0 inset-x-0 h-6 bg-black/50 z-20" />
+                <div className="w-full h-full bg-gradient-to-b from-gray-900 to-[#0D0D0D] p-6 flex flex-col justify-end">
+                  <div className="text-[#C8FF00] text-4xl font-bold">$4,528</div>
+                  <div className="text-white text-sm mt-2">Total Revenue</div>
+                  <div className="mt-4 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#C8FF00] w-[70%]" />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+            
+            {/* Glow Effect */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#C8FF00]/10 rounded-full blur-3xl -z-10" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 bg-[#0D0D0D] relative">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-12 mb-16">
+            <div>
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6">
+                Your trusted partner of <br />
+                <span className="text-[#C8FF00]">growing</span> business
+              </h2>
+            </div>
+            <div className="flex items-end">
+              <p className="text-[#888888] text-lg leading-relaxed max-w-md">
+                We provide the infrastructure for you to build, scale, and manage your automated workflows with confidence and precision.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => handleCardClick(feature)}
+                className={`
+                  relative p-8 rounded-[20px] cursor-pointer group transition-all duration-300
+                  ${feature.isFeatured 
+                    ? 'bg-[#C8FF00] text-black transform md:-translate-y-4 shadow-[0_0_30px_rgba(200,255,0,0.2)]' 
+                    : 'bg-[#141414] border border-white/5 hover:border-[#C8FF00]/30 hover:bg-[#1A1A1A]'
+                  }
+                `}
+              >
+                <div className={`text-3xl font-bold mb-6 ${feature.isFeatured ? 'text-black/80' : 'text-[#C8FF00]'}`}>
+                  {feature.number}
+                </div>
+                <h3 className={`text-2xl font-bold mb-4 ${feature.isFeatured ? 'text-black' : 'text-white'}`}>
+                  {feature.title}
+                </h3>
+                <p className={`leading-relaxed ${feature.isFeatured ? 'text-black/80' : 'text-[#888888]'}`}>
+                  {feature.description}
+                </p>
+                
+                {feature.isFeatured && (
+                  <div className="mt-8 flex items-center text-black font-bold group-hover:gap-2 transition-all">
+                    Learn More <ArrowRight className="w-5 h-5 ml-2" />
+                  </div>
+                )}
+
+                {!feature.isFeatured && (
+                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Edit2 className="w-5 h-5 text-[#C8FF00]" />
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats / Chart Section */}
+      <section className="py-24 bg-[#0D0D0D]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="relative bg-[#141414] border border-white/5 rounded-3xl p-8 lg:p-12 overflow-hidden">
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#C8FF00]/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+            
+            <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
+              <div>
+                <h3 className="text-3xl font-bold mb-6">Live Performance Metrics</h3>
+                <p className="text-[#888888] mb-8">Track your automation success in real-time with our advanced analytics dashboard.</p>
+                
+                <div className="space-y-4">
+                  {[
+                    { label: 'Active Workflows', value: '98.5%', change: '+12%' },
+                    { label: 'Tasks Completed', value: '2.4M', change: '+24%' },
+                    { label: 'Avg. Response Time', value: '12ms', change: '-5%' },
+                  ].map((stat, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 bg-[#0D0D0D] rounded-xl border border-white/5">
+                      <span className="text-[#888888]">{stat.label}</span>
+                      <div className="flex items-center gap-4">
+                        <span className="text-white font-bold">{stat.value}</span>
+                        <span className={`text-sm font-bold ${stat.change.startsWith('+') ? 'text-[#C8FF00]' : 'text-red-500'}`}>
+                          {stat.change}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="relative h-[300px] bg-[#0D0D0D] rounded-2xl border border-white/5 p-6 flex items-end justify-between overflow-hidden">
+                {/* Mock Chart Lines */}
+                <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+                  <path d="M0,200 C100,180 200,250 300,150 S500,100 600,50 L600,300 L0,300 Z" fill="rgba(200,255,0,0.05)" />
+                  <path d="M0,200 C100,180 200,250 300,150 S500,100 600,50" fill="none" stroke="#C8FF00" strokeWidth="3" />
+                </svg>
+                
+                {/* Floating Cards */}
+                <motion.div 
+                  animate={{ y: [0, -10, 0], rotate: [-2, 2, -2] }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                  className="absolute top-10 left-10 bg-[#1A1A1A]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-xl z-20"
+                >
+                  <div className="text-[#888888] text-xs mb-1">Revenue</div>
+                  <div className="text-white font-bold text-lg">$4,528 USD</div>
+                  <div className="text-[#C8FF00] text-xs font-bold mt-1">+12.5%</div>
+                </motion.div>
+
+                <motion.div 
+                  animate={{ y: [0, 10, 0], rotate: [2, -2, 2] }}
+                  transition={{ duration: 6, repeat: Infinity, delay: 1 }}
+                  className="absolute bottom-10 right-10 bg-[#1A1A1A]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-xl z-20"
+                >
+                  <div className="text-[#888888] text-xs mb-1">Active Nodes</div>
+                  <div className="text-white font-bold text-lg">843</div>
+                  <div className="text-[#C8FF00] text-xs font-bold mt-1">Online</div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="py-24 bg-[#0D0D0D]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1">
+               <div className="relative rounded-3xl overflow-hidden border border-white/5">
+                 <img src="https://images.unsplash.com/photo-1639322537228-ad7117a767f5?q=80&w=2000&auto=format&fit=crop" alt="Dashboard" className="w-full h-auto opacity-80" />
+                 <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] to-transparent" />
+               </div>
+            </div>
+            
+            <div className="order-1 lg:order-2">
+              <div className="flex gap-1 mb-6">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star key={i} className="w-5 h-5 text-[#C8FF00] fill-[#C8FF00]" />
+                ))}
+              </div>
+              
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                Trusted platform <br /> anytime & anywhere
+              </h2>
+              
+              <p className="text-[#888888] text-lg mb-6 leading-relaxed">
+                Our enterprise-grade infrastructure ensures 99.99% uptime with military-grade security protocols.
+              </p>
+              
+              <p className="text-[#888888] text-lg mb-10 leading-relaxed">
+                Join industry leaders who rely on Malton AI to power their critical business operations globally.
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                <button className="bg-[#C8FF00] text-black px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider hover:shadow-[0_0_20px_rgba(200,255,0,0.4)] transition-all">
+                  Start Free Trial
+                </button>
+                <button className="bg-transparent border border-white/20 text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider hover:border-[#C8FF00] hover:text-[#C8FF00] transition-all">
+                  Contact Sales
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/5 bg-[#0D0D0D] py-12">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="text-2xl font-bold text-[#C8FF00]">MALTON<span className="text-white">AI</span></div>
+          <div className="text-[#888888] text-sm">
+            © 2024 Malton Automation. All rights reserved.
+          </div>
+          <div className="flex gap-6">
+            {['Privacy', 'Terms', 'Twitter', 'GitHub'].map((item) => (
+              <a key={item} href="#" className="text-[#888888] hover:text-[#C8FF00] text-sm transition-colors">
+                {item}
+              </a>
+            ))}
+          </div>
+        </div>
+      </footer>
+
+      {/* Edit Modal */}
+      <AnimatePresence>
+        {selectedFeature && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => setSelectedFeature(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#141414] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
+            >
+              <div className="p-6 border-b border-white/5 flex justify-between items-center">
+                <h3 className="text-xl font-bold text-white">Edit Feature</h3>
+                <button onClick={() => setSelectedFeature(null)} className="text-[#888888] hover:text-white">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              
+              <div className="p-6 space-y-6">
+                <div>
+                  <label className="block text-xs font-bold text-[#C8FF00] uppercase mb-2">Title</label>
+                  <input 
+                    type="text" 
+                    value={editForm.title}
+                    onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                    className="w-full bg-[#0D0D0D] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#C8FF00] transition-colors"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-bold text-[#C8FF00] uppercase mb-2">Description</label>
+                  <textarea 
+                    value={editForm.description}
+                    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                    rows={4}
+                    className="w-full bg-[#0D0D0D] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#C8FF00] transition-colors resize-none"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button 
+                    onClick={() => setSelectedFeature(null)}
+                    className="flex-1 bg-transparent border border-white/20 text-white py-3 rounded-lg font-bold hover:bg-white/5 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={handleSave}
+                    className="flex-1 bg-[#C8FF00] text-black py-3 rounded-lg font-bold hover:shadow-[0_0_15px_rgba(200,255,0,0.3)] transition-all flex items-center justify-center gap-2"
+                  >
+                    <Save className="w-4 h-4" /> Save Changes
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
