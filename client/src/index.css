@@ -58,3 +58,8 @@ body {
 ::selection { 
   background: var(--accent); 
   color: #000; 
+} 
+ 
+.text-accent { color: var(--accent); } 
+.bg-accent { background-color: var(--accent); } 
+.border-subtle { border-color: var(--border-subtle); } 
