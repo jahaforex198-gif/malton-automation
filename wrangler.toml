@@ -4,6 +4,11 @@ compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 minify = true
 
+[build]
+command = "pnpm run build"
+[build.upload]
+format = "modules"
+
 [assets]
 directory = "dist/public"
 binding = "ASSETS"
